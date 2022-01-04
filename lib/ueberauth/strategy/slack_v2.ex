@@ -33,7 +33,10 @@ defmodule Ueberauth.Strategy.SlackV2 do
   def handle_request!(conn) do
     scopes = conn.params["scope"] || option(conn, :default_scope)
     user_scopes = conn.params["user_scope"] || option(conn, :default_user_scope)
-    opts = [scope: scopes, user_scope: user_scopes]
+    opts = [user_scope: user_scopes]
+
+    opts =
+      if scopes != "", do: Keyword.put(opts, :scope, scopes), else: opts
 
     opts =
       if conn.params["state"], do: Keyword.put(opts, :state, conn.params["state"]), else: opts
